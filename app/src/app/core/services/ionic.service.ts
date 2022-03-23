@@ -64,14 +64,15 @@ export class IonicService {
     return alert;
   }
 
-  async showModal(component, componentProps, callback) {
+  async showModal(component, componentProps, callback?) {
     const modal = await this.modalCtrl.create({
       component,
       componentProps
     });
     modal.onDidDismiss()
     .then(res => {
-      callback(res);
+      if (callback)
+        callback(res);
     })
     modal.present();
   }
@@ -97,6 +98,7 @@ export class IonicService {
           {
             text: 'Cancel',
             role: 'cancel',
+            id: 'btn-cancel',
             cssClass: 'secondary',
             handler: () => {
               reject();

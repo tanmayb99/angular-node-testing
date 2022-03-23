@@ -13,8 +13,12 @@ export class TransferService {
     private api: ApiService
   ) { }
 
-  getAll(): Observable<ITransfer[]> {
-    return this.api.get(`${API.transfer.getAll}`);
+  getAll(title?: string): Observable<ITransfer[]> {
+    let url = `${API.transfer.getAll}`;
+    if (title) {
+        url += `?title=${title}`;
+    }
+    return this.api.get(url);
   }
 
   create(transfer: ITransfer): Observable<ITransfer> {
@@ -26,7 +30,7 @@ export class TransferService {
     return this.api.delete(url);
   }
 
-  update(uuid: string, transfer: ITransfer): Observable<any> {
+  update(uuid: any, transfer: any): Observable<any> {
     const url = `${API.transfer.deleteByUuid}`.replace('{:uuid}', uuid);
     return this.api.put(url, transfer);
   }

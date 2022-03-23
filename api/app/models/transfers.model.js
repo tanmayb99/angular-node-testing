@@ -14,12 +14,9 @@ Transfers.create = (newTransfer, result) => {
   newTransfer['uuid'] = uuidv4();
   sql.query("INSERT INTO transfer SET ?", newTransfer, (err, res) => {
     if (err) {
-      console.log("error: ", err);
       result(err, null);
       return;
     }
-
-    console.log("created Transfer: ", { id: res.insertId, ...newTransfer });
     result(null, { id: res.insertId, ...newTransfer });
   });
 };
@@ -27,13 +24,11 @@ Transfers.create = (newTransfer, result) => {
 Transfers.findById = (uuid, result) => {
   sql.query(`SELECT * FROM transfer WHERE uuid = '${uuid}'`, (err, res) => {
     if (err) {
-      console.log("error: ", err);
       result(err, null);
       return;
     }
 
     if (res.length) {
-      console.log("found Transfer: ", res[0]);
       result(null, res[0]);
       return;
     }
@@ -47,17 +42,14 @@ Transfers.getAll = (searchQuery, result) => {
   let query = "SELECT * FROM transfer";
 
   if (searchQuery) {
-    query += ` WHERE account_holder LIKE '%${query}%' or note LIKE '%${searchQuery}%'`;
+    query += ` WHERE account_holder LIKE '%${searchQuery}%' or note LIKE '%${searchQuery}%'`;
   }
 
   sql.query(query, (err, res) => {
     if (err) {
-      console.log("error: ", err);
       result(null, err);
       return;
     }
-
-    console.log("Transfer: ", res);
     result(null, res);
   });
 };
@@ -68,7 +60,6 @@ Transfers.updateById = (uuid, transfer, result) => {
     [transfer.account_holder, transfer.iban, transfer.amount, transfer.date, transfer.note, uuid],
     (err, res) => {
       if (err) {
-        console.log("error: ", err);
         result(null, err);
         return;
       }
@@ -78,8 +69,6 @@ Transfers.updateById = (uuid, transfer, result) => {
         result({ kind: "not_found" }, null);
         return;
       }
-
-      console.log("updated Transfer: ", { uuid, ...transfer });
       result(null, { uuid, ...transfer });
     }
   );
@@ -88,7 +77,6 @@ Transfers.updateById = (uuid, transfer, result) => {
 Transfers.remove = (id, result) => {
   sql.query("DELETE FROM transfer WHERE uuid = ?", id, (err, res) => {
     if (err) {
-      console.log("error: ", err);
       result(null, err);
       return;
     }
@@ -98,8 +86,6 @@ Transfers.remove = (id, result) => {
       result({ kind: "not_found" }, null);
       return;
     }
-
-    console.log("deleted Transfer with id: ", id);
     result(null, res);
   });
 };
